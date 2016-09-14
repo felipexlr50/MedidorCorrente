@@ -12,39 +12,15 @@
     tools:context=".activities.SensorActivity"
     tools:showIn="@layout/activity_main">
 
-    <TableLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent">
 
-        <Button
+        <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Led On"
-            android:id="@+id/buttonOn" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Led Off"
-            android:id="@+id/buttonOff" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/textView"
-            android:layout_gravity="center"
-            android:gravity="center" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textUri"
-            android:ems="10"
-            android:id="@+id/editText"
-            />
-
-    </TableLayout>
-
+            android:id="@+id/list"
+            android:dividerHeight="2sp"/>
+    </LinearLayout>
 </RelativeLayout>

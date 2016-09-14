@@ -7,12 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.felipe.medidorcorrente.R;
+import com.example.felipe.medidorcorrente.adapters.GraficoListAdapter;
 import com.example.felipe.medidorcorrente.database.SensorDAO;
 import com.example.felipe.medidorcorrente.handlers.InternetConnectionHandler;
+import com.example.felipe.medidorcorrente.handlers.Session;
+import com.example.felipe.medidorcorrente.model.Device;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,12 +25,9 @@ import java.util.ArrayList;
 
 public class SensorActivity extends Activity{
 
-    private Button btLedOn;
-    private Button btLedOff;
-    private EditText ipURL;
-    private TextView resultado;
     private SensorDAO dao;
     private double valor;
+    private ListView listView;
 
 
     @Override
@@ -34,48 +35,32 @@ public class SensorActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btLedOn = (Button) findViewById(R.id.buttonOn);
-        resultado = (TextView) findViewById(R.id.textView);
-        btLedOff = (Button) findViewById(R.id.buttonOff);
-        ipURL = (EditText) findViewById(R.id.editText);
+        listView = (ListView) findViewById(R.id.list);
 
+        new DataFromDB().execute();
 
-        btLedOn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-               // new HttpAsyncTask().execute("http://"+ipURL.getText().toString()+"/corrente");
-            }
-        });
-
-        btLedOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // new HttpAsyncTask().execute("http://"+ipURL.getText().toString()+"/ledOff");
-            }
-        });
-
-        new HttpAsyncTask().execute("http://192.168.1.107/corrente");
+        //new HttpAsyncTask().execute("http://192.168.1.107/corrente");
 
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            boolean whileTest = false;
+            //boolean whileTest = false;
+            Session.setScanRunning(false);
             ArrayList<Double> list;
             do {
             final String aux = onJsonResponse(InternetConnectionHandler.getRequest(urls[0], SensorActivity.this));
             valor = Double.valueOf(aux);
             dao = new SensorDAO();
-            whileTest = dao.insertSensor("Sensor 1", valor, SensorActivity.this);
+            Session.setScanRunning(dao.insertSensor("Sensor 1", valor, SensorActivity.this));
             list = dao.getSensorValue("Sensor 1",SensorActivity.this);
-                final ArrayList<Double> finalList = list;
+
                 runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
-                    resultado.setText(finalList.toString());
+
                 }
             });
             try {
@@ -83,13 +68,29 @@ public class SensorActivity extends Activity{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }while(whileTest);
+        }while(Session.isScanRunning());
             return "";
+        }
+    }
+
+    private class DataFromDB extends AsyncTask<String, Void, Device>{
+
+
+        @Override
+        protected Device doInBackground(String... params) {
+
+            dao = new SensorDAO();
+
+            return dao.getSensorValue2("Sensor 1",SensorActivity.this);
         }
 
         @Override
-        protected void onPostExecute(String result) {
-
+        protected void onPostExecute(Device device){
+            ArrayList<Device> devices = new ArrayList<>();
+            devices.add(device);
+            GraficoListAdapter graficoListAdapter = new GraficoListAdapter(devices,SensorActivity.this);
+            listView.setAdapter(graficoListAdapter);
+            graficoListAdapter.notifyDataSetChanged();
         }
     }
 
