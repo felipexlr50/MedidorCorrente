@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.felipe.medidorcorrente.model.Device;
 import com.github.mikephil.charting.data.Entry;
@@ -47,25 +48,40 @@ public class SensorDAO {
         return list;
     }
 
-    public Device getSensorValue2(String nome, Context context){
-        ArrayList<Entry> entries = new ArrayList<>();
-        ArrayList<String> labels = new ArrayList<>();
+    public ArrayList<Device> getSensorValue2(String nome, Context context){
+        ArrayList<Device> devices = new ArrayList<>();
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
-        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT "+SetDataBase.VALOR+" FROM "+SetDataBase.TBL
-                +" WHERE "+SetDataBase.NOME+" = '"+nome+"'"
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT DISTINCT "+SetDataBase.NOME+" FROM "+SetDataBase.TBL
                 +" ORDER BY "+SetDataBase.DATA_IN+" ASC",null);
 
         if(cursor.moveToFirst()){
             do{
-                entries.add(new Entry((float) cursor.getDouble(cursor.getColumnIndex(SetDataBase.VALOR)),cursor.getPosition()));
-                labels.add(cursor.getString(cursor.getColumnIndex(SetDataBase.DATA_IN)));
+                String nomeDevice = cursor.getString(cursor.getColumnIndex(SetDataBase.NOME));
+                devices.add(new Device(nomeDevice));
             }while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
 
-        return new Device(entries,"Aparelho 1", labels);
+        return devices;
+    }
+
+    public void testTable(Context context){
+
+        dataBase = new SetDataBase(context);
+        db = dataBase.getWritableDatabase();
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("Select * from "+SetDataBase.TBL,null);
+        String result="";
+        if(cursor.moveToFirst()){
+            do{
+                result+=cursor.getString(cursor.getColumnIndex(SetDataBase.NOME));
+
+            }while (cursor.moveToNext());
+            Log.d("tabela",result);
+        }
+
+        Log.d("tabela","fail");
     }
 
 

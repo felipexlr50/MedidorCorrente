@@ -15,14 +15,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class GraficoListAdapter extends BaseAdapter {
+public class DeviceListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private ArrayList<Device> itens;
     private Context context;
 
 
-    public GraficoListAdapter(ArrayList<Device> itens, Context context) {
+    public DeviceListAdapter(ArrayList<Device> itens, Context context) {
 
         this.itens = itens;
         this.context = context;
@@ -55,8 +55,6 @@ public class GraficoListAdapter extends BaseAdapter {
             itemHolder = new ItemSuporte();
             itemHolder.txtTitle = ((TextView) view.findViewById(R.id.txtTitle));
 
-            itemHolder.lineChart = (LineChart) view.findViewById(R.id.chartDevice);
-
 
             view.setTag(itemHolder);
         } else {
@@ -64,17 +62,7 @@ public class GraficoListAdapter extends BaseAdapter {
             itemHolder = (ItemSuporte) view.getTag();
         }
         Device item = itens.get(position);
-
-
         itemHolder.txtTitle.setText(item.getNome());
-        item.getLineDataSet().setDrawCubic(true);
-        item.getLineDataSet().setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        item.getLineDataSet().setDrawCircles(false);
-
-        itemHolder.lineChart.setData(item.getLineData());
-        itemHolder.lineChart.animateY(3000);
-        itemHolder.lineChart.invalidate();
-
 
         return view;
     }
@@ -82,6 +70,5 @@ public class GraficoListAdapter extends BaseAdapter {
     private class ItemSuporte {
 
         TextView txtTitle;
-        LineChart lineChart;
     }
 }

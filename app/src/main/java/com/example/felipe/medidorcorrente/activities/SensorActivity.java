@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.felipe.medidorcorrente.R;
-import com.example.felipe.medidorcorrente.adapters.GraficoListAdapter;
+import com.example.felipe.medidorcorrente.adapters.DeviceListAdapter;
 import com.example.felipe.medidorcorrente.database.SensorDAO;
 import com.example.felipe.medidorcorrente.handlers.InternetConnectionHandler;
 import com.example.felipe.medidorcorrente.handlers.Session;
@@ -39,6 +35,8 @@ public class SensorActivity extends Activity{
 
         new DataFromDB().execute();
 
+        dao = new SensorDAO();
+        dao.testTable(this);
         //new HttpAsyncTask().execute("http://192.168.1.107/corrente");
 
     }
@@ -73,11 +71,11 @@ public class SensorActivity extends Activity{
         }
     }
 
-    private class DataFromDB extends AsyncTask<String, Void, Device>{
+    private class DataFromDB extends AsyncTask<String, Void, ArrayList<Device>>{
 
 
         @Override
-        protected Device doInBackground(String... params) {
+        protected ArrayList<Device> doInBackground(String... params) {
 
             dao = new SensorDAO();
 
@@ -85,12 +83,10 @@ public class SensorActivity extends Activity{
         }
 
         @Override
-        protected void onPostExecute(Device device){
-            ArrayList<Device> devices = new ArrayList<>();
-            devices.add(device);
-            GraficoListAdapter graficoListAdapter = new GraficoListAdapter(devices,SensorActivity.this);
-            listView.setAdapter(graficoListAdapter);
-            graficoListAdapter.notifyDataSetChanged();
+        protected void onPostExecute(ArrayList<Device> devices){
+            DeviceListAdapter deviceListAdapter = new DeviceListAdapter(devices,SensorActivity.this);
+            listView.setAdapter(deviceListAdapter);
+            deviceListAdapter.notifyDataSetChanged();
         }
     }
 
