@@ -26,6 +26,7 @@ public class SensorDAO {
         cv.put(SetDataBase.NOME,nome);
         cv.put(SetDataBase.VALOR,valor);
         i = db.insert(SetDataBase.TBL,null,cv);
+        db.close();
         if(i==-1) return false;
         else return true;
     }
@@ -49,6 +50,7 @@ public class SensorDAO {
     }
 
     public ArrayList<Device> getSensorValue2(String nome, Context context){
+        Log.d("teste","inicio");
         ArrayList<Device> devices = new ArrayList<>();
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
@@ -59,8 +61,10 @@ public class SensorDAO {
             do{
                 String nomeDevice = cursor.getString(cursor.getColumnIndex(SetDataBase.NOME));
                 devices.add(new Device(nomeDevice));
+                Log.d("teste",nomeDevice);
             }while(cursor.moveToNext());
         }
+        Log.d("teste","final");
         cursor.close();
         db.close();
 
@@ -71,7 +75,7 @@ public class SensorDAO {
 
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
-        Cursor cursor = dataBase.getReadableDatabase().rawQuery("Select * from "+SetDataBase.TBL,null);
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("Select DISTINCT "+SetDataBase.NOME+" from "+SetDataBase.TBL,null);
         String result="";
         if(cursor.moveToFirst()){
             do{
@@ -80,8 +84,7 @@ public class SensorDAO {
             }while (cursor.moveToNext());
             Log.d("tabela",result);
         }
-
-        Log.d("tabela","fail");
+        db.close();
     }
 
 

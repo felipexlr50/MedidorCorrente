@@ -13,6 +13,15 @@ public class Session {
 
     public ArrayList<Device> devices;
 
+    public static String ipAddress;
+
+    public static String getIpAddress() {
+        return ipAddress;
+    }
+
+    public static void setIpAddress(String ipAddress) {
+        Session.ipAddress = ipAddress;
+    }
 
     public ArrayList<Device> getDevices() {
         return devices;
