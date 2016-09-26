@@ -10,6 +10,7 @@ import com.example.felipe.medidorcorrente.handlers.Session;
 import com.example.felipe.medidorcorrente.model.Device;
 import com.github.mikephil.charting.data.Entry;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class SensorDAO {
                 +" WHERE "+SetDataBase.NOME+" = '"+nome+"'"
                 +" ORDER BY "+SetDataBase.DATA_IN+" ASC",null);
 
+        DecimalFormat format = new DecimalFormat("0.0E0");
         if(cursor.moveToFirst()){
             do{
                 list.add(cursor.getDouble(cursor.getColumnIndex(SetDataBase.VALOR))+"");

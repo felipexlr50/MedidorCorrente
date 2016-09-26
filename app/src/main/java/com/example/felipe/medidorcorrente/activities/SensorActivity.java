@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.felipe.medidorcorrente.R;
 import com.example.felipe.medidorcorrente.adapters.DeviceListAdapter;
 import com.example.felipe.medidorcorrente.database.SensorDAO;
+import com.example.felipe.medidorcorrente.handlers.BackGroundTask;
 import com.example.felipe.medidorcorrente.handlers.CustomMessage;
 import com.example.felipe.medidorcorrente.handlers.Session;
 import com.example.felipe.medidorcorrente.model.Device;
@@ -44,7 +45,14 @@ public class SensorActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dao.testTable(SensorActivity.this);
+                BackGroundTask backGroundTask = new BackGroundTask();
+                if(Session.isScanRunning()){
+                    Toast.makeText(SensorActivity.this, "Ja esta pegando dados!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(SensorActivity.this, "Pegando dados...", Toast.LENGTH_SHORT).show();
+                    backGroundTask.testGetData(SensorActivity.this);
+                }
             }
         });
 

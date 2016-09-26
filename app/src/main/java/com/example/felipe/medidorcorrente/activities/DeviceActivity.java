@@ -2,7 +2,6 @@ package com.example.felipe.medidorcorrente.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,14 +18,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class DeviceActivity extends AppCompatActivity {
 
     private LineChart lineChart;
-    private BackGroundTask backGroundTask;
     private SensorDAO dao;
+    private TextView txtConsumo;
 
 
     @Override
@@ -43,9 +41,11 @@ public class DeviceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dao.getSensorValue(Session.getSelectedDevice().getNome(),DeviceActivity.this);
                 setGraph();
+                setConsumeSum();
             }
         });
 
+        txtConsumo = (TextView) findViewById(R.id.txtConsumo);
 
         Button btnOn = (Button) findViewById(R.id.btnOn);
         assert btnOn != null;
@@ -69,13 +69,8 @@ public class DeviceActivity extends AppCompatActivity {
         title.setText(Session.getSelectedDevice().getNome());
         lineChart = (LineChart) findViewById(R.id.chart);
 
-        TextView txtConsumo = (TextView) findViewById(R.id.txtConsumo);
-        String aux = txtConsumo != null ? txtConsumo.getText().toString() : "";
-        aux+= dao.getConsumeSum(this,Session.getSelectedDevice().getNome());
-        txtConsumo.setText(aux);
-
+        setConsumeSum();
         setGraph();
-        backGroundTask=new BackGroundTask();
     }
 
     private void setGraph(){
@@ -109,6 +104,11 @@ public class DeviceActivity extends AppCompatActivity {
     public void setOff(){
         BackGroundTask.SetOFF(this,Session.getSelectedDevice().getNome());
 
+    }
+
+    private void setConsumeSum(){
+        String aux = "Consumo total: "+ dao.getConsumeSum(this,Session.getSelectedDevice().getNome())+ " kWh";
+        txtConsumo.setText(aux);
     }
 
 
