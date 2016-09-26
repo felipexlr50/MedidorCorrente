@@ -2,14 +2,11 @@ package com.example.felipe.medidorcorrente.handlers;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.widget.EditText;
 
-/**
- * Created by desenvolvedor2 on 21/09/16.
- */
+
 
 public class CustomMessage {
     BackGroundTask backGroundTask;
@@ -20,14 +17,15 @@ public class CustomMessage {
         builder.setTitle("Alerta");
         final EditText input = new EditText(context);
 
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
         builder.setMessage("Coloque o ip do arduino")
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Session.setIpAddress(input.getText().toString());
-                        backGroundTask.GetData(context);
+                       backGroundTask.testGetData(context);
+                       // BackGroundTask.SetON(context,"Sensor 1");
 
                     }
                 })

@@ -6,9 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.felipe.medidorcorrente.handlers.Session;
 import com.example.felipe.medidorcorrente.model.Device;
 import com.github.mikephil.charting.data.Entry;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -20,30 +23,44 @@ public class SensorDAO {
 
     public boolean insertSensor(String nome, double valor, Context context){
         long i = 0;
+        double amper = (40.0/1000.0);
+        double time = 1.0/3600.0;
+        double voltage = valor;
+        double consumo = ((amper*voltage)/1000)*time;
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
         ContentValues cv=new ContentValues();
         cv.put(SetDataBase.NOME,nome);
-        cv.put(SetDataBase.VALOR,valor);
+        cv.put(SetDataBase.VALOR,consumo);
         i = db.insert(SetDataBase.TBL,null,cv);
         db.close();
         if(i==-1) return false;
         else return true;
     }
 
-    public ArrayList<Double> getSensorValue(String nome,Context context){
-        ArrayList<Double> list = new ArrayList<>();
+    public ArrayList<String> getSensorValue(String nome,Context context){
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> datesList = new ArrayList<>();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format2 = new SimpleDateFormat("MMM/dd HH:mm");
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
-        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT "+SetDataBase.VALOR+" FROM "+SetDataBase.TBL
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT "+SetDataBase.VALOR+", "+SetDataBase.DATA_IN+" FROM "+SetDataBase.TBL
                 +" WHERE "+SetDataBase.NOME+" = '"+nome+"'"
                 +" ORDER BY "+SetDataBase.DATA_IN+" ASC",null);
 
         if(cursor.moveToFirst()){
             do{
-                list.add(cursor.getDouble(cursor.getColumnIndex(SetDataBase.VALOR)));
+                list.add(cursor.getDouble(cursor.getColumnIndex(SetDataBase.VALOR))+"");
+                try {
+                    datesList.add(format2.format(format1.parse(cursor.getString(cursor.getColumnIndex(SetDataBase.DATA_IN)))));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }while(cursor.moveToNext());
         }
+        Session.getSelectedDevice().setValues(list);
+        Session.getSelectedDevice().setDates(datesList);
         cursor.close();
         db.close();
         return list;
@@ -71,6 +88,7 @@ public class SensorDAO {
         return devices;
     }
 
+
     public void testTable(Context context){
 
         dataBase = new SetDataBase(context);
@@ -84,7 +102,25 @@ public class SensorDAO {
             }while (cursor.moveToNext());
             Log.d("tabela",result);
         }
+        cursor.close();
         db.close();
+    }
+
+    public String getConsumeSum(Context context, String nome){
+
+        dataBase = new SetDataBase(context);
+        db = dataBase.getWritableDatabase();
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT SUM("+SetDataBase.VALOR+") AS 'SOMA' FROM "+SetDataBase.TBL
+                +" WHERE "+SetDataBase.NOME+" = '"+nome+"'",null);
+        String result = "";
+        if(cursor.moveToFirst()){
+            do{
+                result=cursor.getString(cursor.getColumnIndex("SOMA"));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return result;
     }
 
 

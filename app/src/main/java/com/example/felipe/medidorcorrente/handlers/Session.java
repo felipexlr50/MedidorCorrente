@@ -9,11 +9,24 @@ import java.util.ArrayList;
  */
 public class Session {
 
-    public static boolean scanRunning;
+    private static boolean scanRunning;
 
-    public ArrayList<Device> devices;
+    private ArrayList<Device> devices;
 
-    public static String ipAddress;
+    private static Device selectedDevice;
+
+    private static String ipAddress;
+
+    //----
+
+
+    public static Device getSelectedDevice() {
+        return selectedDevice;
+    }
+
+    public static void setSelectedDevice(Device selectedDevice) {
+        Session.selectedDevice = selectedDevice;
+    }
 
     public static String getIpAddress() {
         return ipAddress;

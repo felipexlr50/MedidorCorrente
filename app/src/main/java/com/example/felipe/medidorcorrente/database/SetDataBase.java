@@ -14,7 +14,7 @@ public class SetDataBase extends SQLiteOpenHelper{
 
 
     private static final String DATABASE_NAME = "Corrente.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String CREATE_TABLE = "CREATE TABLE "+TBL+"(\n" +
             COD+" INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
