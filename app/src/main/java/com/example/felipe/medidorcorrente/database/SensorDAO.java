@@ -22,11 +22,13 @@ public class SensorDAO {
     private SetDataBase dataBase;
     private SQLiteDatabase db;
 
-    public boolean insertSensor(String nome, double valor, Context context){
+    public boolean insertSensor(String nome, double amper, Context context){
         long i = 0;
-        double amper = (40.0/1000.0);
+        //double amper = (40.0/1000.0);
+        double voltage = 110;
         double time = 1.0/3600.0;
-        double consumo = ((amper* valor)/1000)*time;
+        amper = amper/1000;
+        double consumo = ((voltage* amper)/1000)*time;
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
         ContentValues cv=new ContentValues();
