@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/txtDeviceNome"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -43,7 +44,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnOn"
                 android:layout_weight="1"
-                android:onClick="setOn (DeviceActivity)" />
+                android:onClick="setOn (DeviceActivity)"
+                android:backgroundTint="@color/colorAccent"
+                android:elevation="2dp"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:text="Desligar"
@@ -51,7 +55,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnOff"
                 android:layout_weight="1"
-                android:onClick="setOff (DeviceActivity)" />
+                android:onClick="setOff (DeviceActivity)"
+                android:backgroundTint="@color/colorAccent"
+                android:elevation="2dp"
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
         <com.github.mikephil.charting.charts.LineChart

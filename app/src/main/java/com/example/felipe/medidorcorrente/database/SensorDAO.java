@@ -26,8 +26,7 @@ public class SensorDAO {
         long i = 0;
         double amper = (40.0/1000.0);
         double time = 1.0/3600.0;
-        double voltage = valor;
-        double consumo = ((amper*voltage)/1000)*time;
+        double consumo = ((amper* valor)/1000)*time;
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
         ContentValues cv=new ContentValues();
@@ -35,8 +34,7 @@ public class SensorDAO {
         cv.put(SetDataBase.VALOR,consumo);
         i = db.insert(SetDataBase.TBL,null,cv);
         db.close();
-        if(i==-1) return false;
-        else return true;
+        return i != -1;
     }
 
     public ArrayList<String> getSensorValue(String nome,Context context){
@@ -68,7 +66,7 @@ public class SensorDAO {
         return list;
     }
 
-    public ArrayList<Device> getSensorValue2(String nome, Context context){
+    public ArrayList<Device> getSensorValue2(Context context){
         Log.d("teste","inicio");
         ArrayList<Device> devices = new ArrayList<>();
         dataBase = new SetDataBase(context);
@@ -90,23 +88,32 @@ public class SensorDAO {
         return devices;
     }
 
-
-    public void testTable(Context context){
-
+    public ArrayList<Device> getSensorValueOrderBy(Context context){
+        Log.d("teste","inicio");
+        ArrayList<Device> devices = new ArrayList<>();
         dataBase = new SetDataBase(context);
         db = dataBase.getWritableDatabase();
-        Cursor cursor = dataBase.getReadableDatabase().rawQuery("Select DISTINCT "+SetDataBase.NOME+" from "+SetDataBase.TBL,null);
-        String result="";
+        Cursor cursor = dataBase.getReadableDatabase().rawQuery("SELECT "+SetDataBase.NOME+", SUM("+SetDataBase
+                .VALOR+") as 'soma'  FROM "+SetDataBase.TBL
+                +" GROUP BY "+SetDataBase.NOME+"  ORDER BY SUM("+SetDataBase.VALOR+") ASC",null);
+
         if(cursor.moveToFirst()){
             do{
-                result+=cursor.getString(cursor.getColumnIndex(SetDataBase.NOME));
-
-            }while (cursor.moveToNext());
-            Log.d("tabela",result);
+                String nomeDevice = cursor.getString(cursor.getColumnIndex(SetDataBase.NOME));
+                float valueSum = cursor.getFloat(cursor.getColumnIndex("soma"));
+                Log.d("SUM",valueSum+"");
+                devices.add(new Device(nomeDevice,valueSum));
+                Log.d("teste",nomeDevice);
+            }while(cursor.moveToNext());
         }
+        Log.d("teste","final");
         cursor.close();
         db.close();
+
+        return devices;
     }
+
+
 
     public String getConsumeSum(Context context, String nome){
 
@@ -124,6 +131,5 @@ public class SensorDAO {
         db.close();
         return result;
     }
-
 
 }

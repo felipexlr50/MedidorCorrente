@@ -6,13 +6,34 @@ public class Device {
 
     private String nome;
 
+    private float valueSum;
+
     private ArrayList<String> values;
 
     private ArrayList<String> dates;
 
+
+
     public Device(String nome) {
 
         this.nome = nome;
+    }
+
+    public Device(String nome, float valueSum) {
+        this.nome = nome;
+        this.valueSum = valueSum;
+    }
+
+
+
+
+
+    public float getValueSum() {
+        return valueSum;
+    }
+
+    public void setValueSum(float valueSum) {
+        this.valueSum = valueSum;
     }
 
     public String getNome() {

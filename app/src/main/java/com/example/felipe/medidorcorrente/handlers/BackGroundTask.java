@@ -53,7 +53,7 @@ public class BackGroundTask {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, "Sem sinal!!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Sem dados! desconectando...", Toast.LENGTH_LONG).show();
                             }
                         });
                     }

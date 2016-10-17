@@ -3,8 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.felipe.medidorcorrente.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_resetIP"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Definir IP"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_sync_white_48dp"
+        android:orderInCategory="100"
+        android:title="Sicronizar"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_stop_sync"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_sync_disabled_white_48dp"
+        android:title="Para sicronização"
+        app:showAsAction="ifRoom" />
+
 </menu>

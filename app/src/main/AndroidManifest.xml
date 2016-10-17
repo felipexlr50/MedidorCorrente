@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_app_logo2_128px"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -24,6 +24,10 @@
         <activity
             android:name=".activities.DeviceActivity"
             android:label="@string/title_activity_device"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.AllDevicesGraph"
+            android:label="@string/title_activity_all_devices_graph"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
